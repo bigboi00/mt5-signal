@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Forex Trading Dashboard</title>
+  <link rel="stylesheet" href="/static/style.css">
+</head>
+<body>
+  <div class="container">
+    <h1>Forex Trading Dashboard</h1>
+    <div id="result">
+      <h2>Trading Signal</h2>
+      <p id="action">Action: --</p>
+      <p id="price">Current Price: --</p>
+      <p id="adr">ADR: --</p>
+      <p id="tp">Take Profit: --</p>
+      <p id="sl">Stop Loss: --</p>
+    </div>
+  </div>
+  <script>
+    // Function to fetch trading data
+    function updateTradingSignal() {
+      fetch("/trade")
+        .then(response => response.json())
+        .then(data => {
+          // Update the DOM with the fetched data
+          document.getElementById("action").innerText = `Action: ${data.action}`;
+          document.getElementById("price").innerText = `Current Price: ${data.current_price}`;
+          document.getElementById("adr").innerText = `ADR: ${data.adr}`;
+          document.getElementById("tp").innerText = `Take Profit: ${data.take_profit || '--'}`;
+          document.getElementById("sl").innerText = `Stop Loss: ${data.stop_loss || '--'}`;
+        })
+        .catch(err => {
+          console.error("Error fetching trading signal:", err);
+        });
+    }
+
+    // Automatically update every 30 seconds
+    updateTradingSignal(); // Initial fetch
+    setInterval(updateTradingSignal, 30000); // Repeat every 30 seconds
+  </script>
+</body>
+</html>
